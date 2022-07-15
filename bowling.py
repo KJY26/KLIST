@@ -1,8 +1,9 @@
-from asyncore import write
+#from asyncore import write
 import random
 import turtle
-from pynput import keyboard
 
+
+check = [0,0,0,0,0,0,0,0,0,0]
 turtle.setup(width=1920, height=1080)
 turtle.hideturtle()
 turtle.penup()
@@ -15,15 +16,32 @@ pos_pin = [(0,-300), (-200,-100), (200,-100), (-400,100),(0,100),(400,100),(-600
 score = 0
 
 def writescore(n):
-    global score
-    if pos[n-1]=='black':
-        score += 4
-    elif pos[n-1]=='red':
-        score += 3
-    elif pos[n-1]=='blue':
-        score += 2
-    elif pos[n-1]=='white':
-        score += 1
+    if check[n-1]==0:
+        global score
+        if pos[n-1]=='black':
+            score += 4
+        elif pos[n-1]=='red':
+            score += 3
+        elif pos[n-1]=='blue':
+            score += 2
+        elif pos[n-1]=='white':
+            score += 1
+        else:
+            pass    
+        check[n-1]=1
+    elif check[n-1]==1:
+        draw(n-1)
+        if pos[n-1]=='black':
+            score -= 4
+        elif pos[n-1]=='red':
+            score -= 3
+        elif pos[n-1]=='blue':
+            score -= 2
+        elif pos[n-1]=='white':
+            score -= 1
+        else:
+            pass   
+        check[n-1]=0
     else:
         pass
     turtle.penup()
@@ -35,8 +53,30 @@ def writescore(n):
     turtle.pencolor("black")
     turtle.write(score, move=False, align="center", font=("Arial", 40, "bold"))
     turtle.penup()
+    
+
+
+def draw(i):
+    color = pos[i]
+    if color=='black':
+            turtle.pencolor("black")
+    elif color=='blue':
+        turtle.pencolor("blue")
+    elif color=='red':
+        turtle.pencolor("red")
+    elif color=='white':
+        turtle.pencolor("white")
+    
+    turtle.goto(pos_pin[i])
+    turtle.pendown()
+    turtle.circle(30)
+    turtle.pencolor("yellow")
+    turtle.write(i+1,move=False, align="center", font=("Arial", 40, "normal"))
+    turtle.penup()
 
 def ran():
+    global check
+    check = [0,0,0,0,0,0,0,0,0,0]
     global pos
     global score
     score = 0
@@ -55,25 +95,8 @@ def ran():
 
     print(pos,black_pos)
 
-    i=0
-    for color in pos:
-        if color=='black':
-            turtle.pencolor("black")
-        elif color=='blue':
-            turtle.pencolor("blue")
-        elif color=='red':
-            turtle.pencolor("red")
-        elif color=='white':
-            turtle.pencolor("white")
-        
-        turtle.goto(pos_pin[i])
-        turtle.pendown()
-        turtle.circle(30)
-        turtle.pencolor("yellow")
-        turtle.write(i+1,move=False, align="center", font=("Arial", 40, "normal"))
-        turtle.penup()
-
-        i=i+1
+    for i in range (0,10):
+        draw(i)
     
     turtle.pencolor("black")
     turtle.pensize(30)
@@ -94,6 +117,7 @@ def ran():
     turtle.penup()
 
 ran()
+
 
 def erase1():
     turtle.penup()
